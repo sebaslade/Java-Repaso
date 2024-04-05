@@ -5,6 +5,7 @@
 package com.mycompany.sistemagestion.dao;
 
 import com.mycompany.sistemagestion.models.Cliente;
+import com.mysql.jdbc.StringUtils;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -92,6 +93,29 @@ public class ClienteDao {
             statement.execute(sql);
         } catch (Exception ex) {
             Logger.getLogger(ClienteDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void actualizar(Cliente cliente){
+        try {
+            Connection conexion = conectar();
+            String sql = "UPDATE `clientes` SET `nombre` = '"+ cliente.getNombre() 
+                    + "', `apellido`= '" + cliente.getApellido() 
+                    + "', `telefono`= '" + cliente.getTelefono()
+                    + "', `email`= '" + cliente.getEmail()
+                    + "' WHERE `clientes`.`id` = "+cliente.getId()+";";
+            Statement statement = conexion.createStatement();
+            statement.execute(sql);
+        } catch (Exception ex) {
+            Logger.getLogger(ClienteDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void guardar(Cliente cliente) {
+        if(StringUtils.isEmptyOrWhitespaceOnly(cliente.getId())){
+            agregar(cliente);
+        }else{
+            actualizar(cliente);
         }
     }
 }
